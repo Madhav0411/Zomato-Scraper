@@ -27,7 +27,11 @@ for category in categories:
     print(hotels)
 
     data = []
+    page = 1
+    total_hotels = len(hotels)
     for hotel in hotels:
+        print(f"Hotel no. {page} out of {total_hotels} Hotels in Category - {category}")
+        new_data = {}
         driver.get("/".join(hotel.split("/")[:5]))
         time.sleep(2)
         soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -44,16 +48,23 @@ for category in categories:
         for item in items:
             item_name = item.find("h4",{"class":"sc-1s0saks-15 iSmBPS"}).text
             item_price = item.find("span",{"class":"sc-17hyc2s-1 cCiQWA"}).text
-            print(item_name,item_price)
-            new_data = {
-                "Name" : name,
-                "Location" : location,
-                "Dining Ratings" : float(dining_rating),
-                "Delivery Ratings" : float(delivery_rating),
-                "Item Name" : item_name,
-                "Item Price" : item_price,
-                "Restaurant URL" : hotel
-            }
+            
+            new_data["Name"] = name
+            new_data["Location"] = location
+
+            if dining_rating == '-':
+                new_data["Dining Ratings"] = 0
+            else:
+                new_data["Dining Ratings"] = float(dining_rating)
+            if delivery_rating == '-':
+                new_data["Delivery Ratings"] = 0
+            else:
+                new_data["Delivery Ratings"] = float(delivery_rating)
+            
+            new_data["Item Name"] = item_name
+            new_data["Item Price"] = item_price
+            new_data["Restaurant URL"] = hotel
+
             data.append(new_data)
 
     df = pd.DataFrame(data)
