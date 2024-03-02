@@ -60,7 +60,8 @@ for category in categories:
 
                 data.append(new_data)
             page += 1
-        except:
+        except Exception as e:
+            print(e)
             continue
 
     df = pd.DataFrame(data)
