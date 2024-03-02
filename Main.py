@@ -20,7 +20,7 @@ for category in categories:
     driver.get(url+"/"+category)
 
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(180)
+    time.sleep(10)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     hotels = ["https://www.zomato.com"+hotel.find("a")['href'] for hotel in soup.find_all("div",{"class":"sc-hAcydR"})]
@@ -32,7 +32,7 @@ for category in categories:
     for hotel in hotels:
         try:
             print(f"Hotel no. {page} out of {total_hotels} Hotels in Category - {category}")
-            new_data = {}
+            
             driver.get("/".join(hotel.split("/")[:5]))
             time.sleep(2)
             soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -40,7 +40,6 @@ for category in categories:
             location = soup.find("p",{"class":"sc-1hez2tp-0 clKRrC"}).text
             dining_rating = soup.find_all("div",{"class":"sc-1q7bklc-1 cILgox"})[0].text
             delivery_rating = soup.find_all("div",{"class":"sc-1q7bklc-1 cILgox"})[1].text
-
 
             driver.get("/".join(hotel.split("/")[:-1])+"/order")
             time.sleep(2)
@@ -50,13 +49,15 @@ for category in categories:
                 item_name = item.find("h4",{"class":"sc-1s0saks-15 iSmBPS"}).text
                 item_price = item.find("span",{"class":"sc-17hyc2s-1 cCiQWA"}).text
                 
-                new_data["Name"] = name
-                new_data["Location"] = location
-                new_data["Dining Ratings"] = dining_rating
-                new_data["Delivery Ratings"] = delivery_rating
-                new_data["Item Name"] = item_name
-                new_data["Item Price"] = item_price
-                new_data["Restaurant URL"] = hotel
+                new_data = {
+                    "Name" : name,
+                    "Location" : location,
+                    "Dining Ratings" : dining_rating,
+                    "Delivery Ratings" : delivery_rating,
+                    "Item Name" : item_name,
+                    "Item Price" : item_price,
+                    "Restaurant URL" : hotel
+                }
 
                 data.append(new_data)
             page += 1
