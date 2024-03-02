@@ -51,22 +51,14 @@ for category in categories:
             
             new_data["Name"] = name
             new_data["Location"] = location
-
-            if dining_rating == '-':
-                new_data["Dining Ratings"] = 0
-            else:
-                new_data["Dining Ratings"] = float(dining_rating)
-            if delivery_rating == '-':
-                new_data["Delivery Ratings"] = 0
-            else:
-                new_data["Delivery Ratings"] = float(delivery_rating)
-            
+            new_data["Dining Ratings"] = dining_rating
+            new_data["Delivery Ratings"] = delivery_rating
             new_data["Item Name"] = item_name
             new_data["Item Price"] = item_price
             new_data["Restaurant URL"] = hotel
 
             data.append(new_data)
-            page += 1
+        page += 1
 
     df = pd.DataFrame(data)
     df.to_excel("Data/"+url.split("/")[3]+"-"+category+".xlsx", index=False)
