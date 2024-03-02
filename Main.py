@@ -23,7 +23,7 @@ for category in categories:
     time.sleep(180)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    hotels = ["https://www.zomato.com"+hotel.find("a")['href'] for hotel in soup.find_all("div",{"class":"sc-hENMEE gieYfx"})]
+    hotels = ["https://www.zomato.com"+hotel.find("a")['href'] for hotel in soup.find_all("div",{"class":"jumbo-tracker"})]
     print(hotels)
 
     data = []
@@ -66,6 +66,7 @@ for category in categories:
             new_data["Restaurant URL"] = hotel
 
             data.append(new_data)
+            page += 1
 
     df = pd.DataFrame(data)
     df.to_excel("Data/"+url.split("/")[3]+"-"+category+".xlsx", index=False)
